@@ -1,0 +1,35 @@
+# Future Ideas for Gamma Watermark Remover (100% Client-Side)
+
+Here are several powerful features that can be added to the project without ever needing a backend server. All of these can run entirely in the user's browser for maximum privacy and zero hosting costs.
+
+## 1. Visual "Suspect" Gallery (Selective Nuke)
+Instead of blindly deleting every image that appears on 3+ slides, the app could show a visual gallery of the suspected watermarks to the user.
+- **How it works:** Extract the suspect images, convert them to base64, and display them in a neat UI grid. The user can simply click the images they want to nuke, avoiding "false positives" (like a company logo they actually want to keep).
+
+## 2. PII & Metadata Scrubber
+Presentations often contain hidden metadata like the author's name, creation dates, editing time, and company names.
+- **How it works:** Parse `docProps/core.xml` and `docProps/app.xml` and clear out all the metadata tags before zipping it back up. Great for privacy-conscious users.
+
+## 3. Batch Processing
+Allow users to drag and drop an entire folder or 50 PPTX files at once.
+- **How it works:** The JS processes each file in a loop, and at the end, uses JSZip to bundle all the cleaned presentations into a single `Cleaned_Presentations.zip` file for easy download.
+
+## 4. Slide Notes Editor / Remover
+People often leave embarrassing or messy presenter notes in their slides when they share them.
+- **How it works:** Target the `ppt/notesSlides/` directory and `ppt/slides/_rels/` to completely strip out all presenter notes with a single toggle switch ("Scrub Presenter Notes").
+
+## 5. Embed Font Stripper
+Sometimes people embed fonts in their presentations, which balloons the file size by 10MB - 50MB unnecessarily.
+- **How it works:** Sniff out the `ppt/fonts/` directory and remove `.fntdata` files, then patch the XML references to drastically reduce file sizes.
+
+## 6. Export to PDF (Local)
+Many users want the final output as a PDF rather than a cleaned PPTX.
+- **How it works:** Using a library like `pdf-lib` or `jspdf` along with a local PPTX-to-HTML canvas renderer (like `pptxjs`), you could theoretically render the plain slides and export them to PDF right in the browser.
+
+## 7. PDF Watermark Removal (Expansion)
+Instead of just supporting `.pptx`, expand the tool to accept `.pdf` files.
+- **How it works:** Use `pdf-lib` to load the PDF in the browser, iterate through the pages, identify overlapping transparent images or text overlays (common watermarks), and strip those objects before saving.
+
+## 8. Dark Mode / Theme Inverter
+Instantly convert a bright, blinding presentation into a sleek dark mode presentation.
+- **How it works:** Modify the `ppt/theme/theme1.xml` file, swapping the `<a:clrScheme>` hex values (e.g., turning white backgrounds dark grey, and black text to light grey).
